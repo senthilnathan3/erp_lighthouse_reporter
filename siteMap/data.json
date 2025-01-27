@@ -3,6 +3,34 @@
     {
       "pageName": "Payroll_Management",
       "url": "https://erp.agnikul.in/Payroll_Management"
+    },
+    {
+      "pageName": "landingpage",
+      "url": "https://erp.agnikul.in/Payroll_Management/landingpage"
+    },
+    {
+      "pageName": "trackrequest",
+      "url": "https://erp.agnikul.in/Payroll_Management/trackrequest"
+    },
+    {
+      "pageName": "leavetracker",
+      "url": "https://erp.agnikul.in/Payroll_Management/leavetracker"
+    },
+    {
+      "pageName": "payslipdownload",
+      "url": "https://erp.agnikul.in/Payroll_Management/payslipdownload"
+    },
+    {
+      "pageName": "salarystructure",
+      "url": "https://erp.agnikul.in/Payroll_Management/salarystructure"
+    },
+    {
+      "pageName": "Calendar",
+      "url": "https://erp.agnikul.in/Payroll_Management/Calendar"
+    },
+    {
+      "pageName": "bills",
+      "url": "https://erp.agnikul.in/Payroll_Management/bills"
     }
   ]
 }

@@ -4,9 +4,12 @@ import { launch } from "chrome-launcher";
 import puppeteer from "puppeteer";
 import dataContent from "./siteMap/data.json";
 import lighthouse from "lighthouse";
+import dotenv from "dotenv";
+dotenv.config();
 
-const ERP_USER = process.env.ERP_USER;
-const ERP_PWD = process.env.ERP_PWD;
+
+const ERP_USER = process.env.ERP_EMAIL
+const ERP_PWD = process.env.ERP_PWD
 
 export class LightHouseWrapper {
   private currentDateTime = new Date().toISOString();

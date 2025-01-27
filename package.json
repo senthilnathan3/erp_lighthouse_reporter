@@ -17,6 +17,7 @@
   "dependencies": {
     "bun-types": "^1.2.0",
     "chrome-launcher": "^1.1.2",
+    "dotenv": "^16.4.7",
     "lighthouse": "^12.3.0",
     "node-fetch": "^3.3.2",
     "playwright": "^1.50.0",

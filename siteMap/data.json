@@ -1,28 +1,20 @@
 {
   "APP_NAME": [
     {
-      "pageName": "quality_desk",
-      "url": "https://erp.agnikul.in/quality_desk"
+      "pageName": "Cad",
+      "url": "https://erp.agnikul.in/Cad"
+    },
+    {
+      "pageName": "raiseRequest",
+      "url": "https://erp.agnikul.in/Cad/raiseRequest"
     },
     {
       "pageName": "trackRequest",
-      "url": "https://erp.agnikul.in/quality_desk/trackRequest"
+      "url": "https://erp.agnikul.in/Cad/trackRequest"
     },
     {
-      "pageName": "request_approval",
-      "url": "https://erp.agnikul.in/quality_desk/request_approval"
-    },
-    {
-      "pageName": "3rdParty_approval",
-      "url": "https://erp.agnikul.in/quality_desk/3rdParty_approval"
-    },
-    {
-      "pageName": "taskLogs",
-      "url": "https://erp.agnikul.in/quality_desk/taskLogs"
-    },
-    {
-      "pageName": "3rdPartyReports",
-      "url": "https://erp.agnikul.in/quality_desk/3rdPartyReports"
+      "pageName": "calendar",
+      "url": "https://erp.agnikul.in/Cad/calendar"
     }
   ]
 }

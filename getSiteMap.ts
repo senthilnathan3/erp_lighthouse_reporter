@@ -8,7 +8,7 @@ dotenv.config();
 
 const ERP_USER = process.env.ERP_EMAIL;
 const ERP_PWD = process.env.ERP_PWD;
-const PageName: string = "food";
+const PageName: string = "Cad";
 
 const generateSiteMap = async () => {
   const browser = await puppeteerExtra.launch({ headless: false });
@@ -28,12 +28,18 @@ const generateSiteMap = async () => {
 
   await page.click("#login-button");
 
-  await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
+  await page.waitForNavigation({ waitUntil: "networkidle2" });
 
-  await page.goto("https://erp.agnikul.in/" + PageName);
-  if (PageName !== "food") {
-    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
-  }
+  await page.goto("https://erp.agnikul.in/" + PageName, {
+    waitUntil: "networkidle2",
+  });
+
+  await page.waitForSelector(".preloader", { hidden: true, timeout: 300000 });
+
+  await page.waitForSelector(".menuicons", {
+    visible: true,
+    timeout: 300000,
+  });
 
   if (PageName === "food") {
     await page.waitForSelector("#Get_started", { visible: true });
@@ -62,12 +68,13 @@ const generateSiteMap = async () => {
       }
     }
   }
-
   const links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll("a[href]"))
+    return Array.from(document.querySelectorAll("a"))
       .map((a) => a.href)
       .filter(Boolean);
   });
+
+  console.log(links);
 
   const uniqueLinks = [...new Set(links)].filter((link) =>
     link.includes("/" + PageName)
@@ -82,6 +89,9 @@ const generateSiteMap = async () => {
 
   writeFileSync("siteMap/data.json", JSON.stringify(jsonStructure, null, 2));
   console.log("Sitemap generated and saved as sitemap.xml");
+  // const pageContent = await page.content();
+  // writeFileSync("siteMap/page.html", pageContent);
+  // console.log("Page content saved as page.html");
 
   await browser.close();
 };

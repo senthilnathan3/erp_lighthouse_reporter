@@ -3,10 +3,12 @@ import puppeteerExtraPluginStealth from "puppeteer-extra-plugin-stealth";
 import { writeFileSync } from "fs";
 
 puppeteerExtra.use(puppeteerExtraPluginStealth());
+import dotenv from "dotenv";
+dotenv.config();
 
-const ERP_USER = process.env.ERP_USER;
+const ERP_USER = process.env.ERP_EMAIL;
 const ERP_PWD = process.env.ERP_PWD;
-const PageName = "Payroll_Management";
+const PageName: string = "food";
 
 const generateSiteMap = async () => {
   const browser = await puppeteerExtra.launch({ headless: false });
@@ -19,32 +21,63 @@ const generateSiteMap = async () => {
   await page.type("#login_email", ERP_USER);
   await page.type("#login_password", ERP_PWD);
 
-
   await page.waitForFunction(
     'document.querySelector("#login-button").disabled === false',
-    { timeout: 0 } 
+    { timeout: 0 }
   );
 
   await page.click("#login-button");
 
-  await page.waitForNavigation({ waitUntil: "networkidle2" });
+  await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
 
   await page.goto("https://erp.agnikul.in/" + PageName);
-  await page.waitForNavigation({ waitUntil: 'networkidle2'});
+  if (PageName !== "food") {
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
+  }
+
+  if (PageName === "food") {
+    await page.waitForSelector("#Get_started", { visible: true });
+    await page.click("#Get_started");
+  }
+
+  if (PageName === "quality_desk") {
+    await page.waitForSelector(".menu");
+
+    // Click all dropdown menus dynamically
+    const dropdownMenus = await page.$$(".menu > div");
+
+    for (const dropdown of dropdownMenus) {
+      try {
+        // Check if the dropdown contains a menu icon and menu name
+        const menuName = await dropdown.$eval(
+          ".menuName",
+          (el) => el.innerText
+        );
+
+        console.log(`Opening dropdown: ${menuName}`);
+        await dropdown.click();
+        await page.waitForNetworkIdle();
+      } catch (error) {
+        console.log("Error interacting with dropdown:", error);
+      }
+    }
+  }
 
   const links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll("a")).map((a) => a.href);
+    return Array.from(document.querySelectorAll("a[href]"))
+      .map((a) => a.href)
+      .filter(Boolean);
   });
 
   const uniqueLinks = [...new Set(links)].filter((link) =>
-    link.startsWith("https://erp.agnikul.in")
+    link.includes("/" + PageName)
   );
 
   const jsonStructure = {
-    "APP_NAME": uniqueLinks.map((link, index) => ({
-      pageName: link.split('/').pop(),
+    APP_NAME: uniqueLinks.map((link, index) => ({
+      pageName: link.split("/").pop(),
       url: link,
-    }))
+    })),
   };
 
   writeFileSync("siteMap/data.json", JSON.stringify(jsonStructure, null, 2));

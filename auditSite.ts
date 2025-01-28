@@ -4,6 +4,7 @@ import { launch } from "chrome-launcher";
 import puppeteer from "puppeteer";
 import dataContent from "./siteMap/data.json";
 import lighthouse from "lighthouse";
+import generateSiteMap from "./getSiteMap";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -19,6 +20,7 @@ export class LightHouseWrapper {
   private browser: any;
 
   async auditSite(): Promise<void> {
+    generateSiteMap();
     await this.setup();
     const urls = await this.getUrls();
     const viewports = this.getViewports();
@@ -93,7 +95,7 @@ export class LightHouseWrapper {
     await page.type("#login_email", ERP_USER);
     await page.type("#login_password", ERP_PWD);
     await page.click("#login-button");
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 });
 
     const cookies = await page.cookies();
     const cookieHeader = cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ");

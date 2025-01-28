@@ -1,36 +1,28 @@
 {
   "APP_NAME": [
     {
-      "pageName": "Payroll_Management",
-      "url": "https://erp.agnikul.in/Payroll_Management"
+      "pageName": "quality_desk",
+      "url": "https://erp.agnikul.in/quality_desk"
     },
     {
-      "pageName": "landingpage",
-      "url": "https://erp.agnikul.in/Payroll_Management/landingpage"
+      "pageName": "trackRequest",
+      "url": "https://erp.agnikul.in/quality_desk/trackRequest"
     },
     {
-      "pageName": "trackrequest",
-      "url": "https://erp.agnikul.in/Payroll_Management/trackrequest"
+      "pageName": "request_approval",
+      "url": "https://erp.agnikul.in/quality_desk/request_approval"
     },
     {
-      "pageName": "leavetracker",
-      "url": "https://erp.agnikul.in/Payroll_Management/leavetracker"
+      "pageName": "3rdParty_approval",
+      "url": "https://erp.agnikul.in/quality_desk/3rdParty_approval"
     },
     {
-      "pageName": "payslipdownload",
-      "url": "https://erp.agnikul.in/Payroll_Management/payslipdownload"
+      "pageName": "taskLogs",
+      "url": "https://erp.agnikul.in/quality_desk/taskLogs"
     },
     {
-      "pageName": "salarystructure",
-      "url": "https://erp.agnikul.in/Payroll_Management/salarystructure"
-    },
-    {
-      "pageName": "Calendar",
-      "url": "https://erp.agnikul.in/Payroll_Management/Calendar"
-    },
-    {
-      "pageName": "bills",
-      "url": "https://erp.agnikul.in/Payroll_Management/bills"
+      "pageName": "3rdPartyReports",
+      "url": "https://erp.agnikul.in/quality_desk/3rdPartyReports"
     }
   ]
 }

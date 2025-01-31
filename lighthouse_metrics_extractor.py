@@ -12,6 +12,108 @@ import re
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+
+def format_cell_value(value):
+    """Format snake_case or camelCase to human-readable format."""
+    # Convert camelCase to snake_case first if needed
+    value = re.sub(r'(?<!^)(?=[A-Z])', '_', value).replace('-', '_').lower()
+    # Capitalize each word and replace underscores with spaces
+    formatted_value = " ".join(word.capitalize() for word in value.split('_'))
+    return formatted_value
+
+def parse_json_to_dataframe(json_path):
+    """
+    Parse the JSON file and convert it into a structured DataFrame.
+    
+    :param json_path: Path to the JSON file
+    :return: A pandas DataFrame
+    """
+    # Load the JSON data from the file
+    with open(json_path, 'r') as file:
+        json_data = json.load(file)
+        
+    # Define a structure for rows to store parsed data
+    rows = []
+    
+    # Iterate over JSON structure
+    for quality_entry in json_data:
+        for category_name, subcategories in quality_entry.items():
+            for subcategory_entry in subcategories:
+                for subcategory_name, modes in subcategory_entry.items():
+                    for mode_entry in modes:
+                        for mode_name, devices in mode_entry.items():
+                            for device_entry in devices:
+                                for device_name, values in device_entry.items():
+                                    # Ensure there are always 4 values for metrics (default NaN if missing)
+                                    metrics = values + [None] * (4 - len(values))
+                                    rows.append([
+                                        format_cell_value(category_name),  # Format category name
+                                        format_cell_value(subcategory_name),  # Format subcategory name
+                                        format_cell_value(mode_name),  # Format mode name
+                                        format_cell_value(device_name),
+                                        metrics[0], metrics[1], metrics[2], metrics[3]
+                                    ])
+
+    # Define column names for DataFrame
+    columns = ["Category", "Subcategory", "Mode", "Device", 
+               "SEO", "Best Practice", "Accessibility", "Performance"]
+
+    # Create the DataFrame
+    df = pd.DataFrame(rows, columns=columns)
+
+    df.to_excel("parsed_data.xlsx", index=False) 
+
+def calculate_metric_percentage(json_file_path, output_excel_path):
+    # Load JSON data
+    with open(json_file_path, "r") as file:
+        json_data = json.load(file)
+    
+    data = []
+    metric_labels = ["Best Practice", "Performance", "Accessibility"]
+
+    # Parse JSON
+    for category in json_data:
+        category_name = list(category.keys())[0]
+        subcategories = list(category.values())[0]
+
+        for subcategory in subcategories:
+            subcategory_name = list(subcategory.keys())[0]
+            modes = list(subcategory.values())[0]
+            
+            # Initialize metrics for both modes
+            timespan_sum = 0
+            navigation_sum = 0
+            
+            for mode in modes:
+                mode_name = list(mode.keys())[0]
+                devices = list(mode.values())[0]
+                
+                for device in devices:
+                    values = list(device.values())[0][:3]  # Best Practice, Performance, Accessibility
+                    
+                    if mode_name == "timespan_mode":
+                        timespan_sum += sum(values)
+                    elif mode_name == "navigation_mode":
+                        navigation_sum += sum(values)
+
+            # Normalize by 300 per mode, then by 600 for both modes combined
+            timespan_percentage = ((timespan_sum / 300)) * 100
+            navigation_percentage = ((navigation_sum / 300)) * 100
+            total_percentage = ((timespan_sum + navigation_sum) / 600) * 100
+            
+            # Append to data
+            data.append([subcategory_name, timespan_percentage, navigation_percentage, total_percentage])
+
+    # Create DataFrame
+    df = pd.DataFrame(data, columns=["Page", "Timespan Mode (%)", "Navigation Mode (%)", "Total Metric (%)"])
+
+    # Export to Excel
+    df.to_excel(output_excel_path, index=False)
+
+    print(f"Data successfully saved to {output_excel_path}")
+
+
 
 def merge_json_files(output_dir):
     """Merge all extracted JSON files into a single JSON file with specific structure"""
@@ -80,11 +182,34 @@ def merge_json_files(output_dir):
     
     print(f"Merged JSON saved to: {merged_json_path}")
 
-    # After saving the JSON file, convert it to Excel and create the summary plot
-    excel_path = os.path.join(output_dir, 'metrics_report.xlsx')
-    # json_to_excel(formatted_data, excel_path)
+    # # Save merged data to Excel
+    # excel_path = os.path.join(output_dir, 'metrics_report.xlsx')
+
+    # # Convert merged data to DataFrame-friendly format
+    # flattened_data = []
+
+    # for category, subcategories in merged_data.items():
+    #     for subcategory, modes in subcategories.items():
+    #         for mode, devices in modes.items():
+    #             for device, values in devices.items():
+    #                 flattened_data.append({
+    #                     "Category": category,
+    #                     "Subcategory": subcategory,
+    #                     "Mode": mode,
+    #                     "Device": device,
+    #                     "Scores": values
+    #                 })
+
+    # # Create DataFrame and save to Excel
+    # df = pd.DataFrame(flattened_data)
+    # df.to_excel(excel_path, index=False)
+    # print(f"Excel report saved to: {excel_path}")
+
+    # After saving the JSON file, create the summary plot
+    # create_summary_plot(formatted_data, output_dir)
+    parse_json_to_dataframe(merged_json_path)
+    # calculate_metric_percentage(merged_json_path, "metric.xlsx")
     
-    create_summary_plot(formatted_data, output_dir)
 
 def extract_numbers_from_circles(image_cv):
     gray = cv2.cvtColor(image_cv, cv2.COLOR_BGR2GRAY)
@@ -136,7 +261,6 @@ def setup_selenium():
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
-import json
 
 def take_screenshot_and_ocr(driver, file_path, output_dir):
     """Take a screenshot of the page and perform OCR on the lh-scores__container"""

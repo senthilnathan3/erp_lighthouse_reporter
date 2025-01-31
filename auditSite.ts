@@ -20,28 +20,28 @@ export class LightHouseWrapper {
   private browser: any;
 
   async auditSite(): Promise<void> {
-    generateSiteMap();
-    // await this.setup();
-    // const urls = await this.getUrls();
-    // const viewports = this.getViewports();
-    // const modes = ["navigation", "snapshot", "timespan"] as const;
+    // generateSiteMap();
+    await this.setup();
+    const urls = await this.getUrls();
+    const viewports = this.getViewports();
+    const modes = ["navigation", "snapshot", "timespan"] as const;
 
-    // for (const source of urls) {
-    //   console.log(`Running audits for page: ${source.pageName}`);
+    for (const source of urls) {
+      console.log(`Running audits for page: ${source.pageName}`);
 
-    //   for (const mode of modes) {
-    //     const modeFolder = join(this.reportFolder, source.pageName.trim(), `${mode}_mode`);
-    //     this.makeDirectory(modeFolder);
+      for (const mode of modes) {
+        const modeFolder = join(this.reportFolder, source.pageName.trim(), `${mode}_mode`);
+        this.makeDirectory(modeFolder);
 
-    //     for (const viewport of viewports) {
-    //       console.log(`Auditing: ${source.url} | Mode: ${mode} | Viewport: ${JSON.stringify(viewport)}`);
-    //       const options = await this.getBrowserConfig(viewport);
-    //       await this.runLighthouse(source, options, mode, modeFolder, viewport);
-    //     }
-    //   }
-    // }
+        for (const viewport of viewports) {
+          console.log(`Auditing: ${source.url} | Mode: ${mode} | Viewport: ${JSON.stringify(viewport)}`);
+          const options = await this.getBrowserConfig(viewport);
+          await this.runLighthouse(source, options, mode, modeFolder, viewport);
+        }
+      }
+    }
 
-    // await this.teardown();
+    await this.teardown();
   }
 
   async runLighthouse(

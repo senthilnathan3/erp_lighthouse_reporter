@@ -8,7 +8,7 @@ dotenv.config();
 
 const ERP_USER = process.env.ERP_EMAIL;
 const ERP_PWD = process.env.ERP_PWD;
-const PageName: string = "food";
+const PageName: string = "Fleet_Management";
 
 const generateSiteMap = async () => {
   const browser = await puppeteerExtra.launch({ headless: false });
@@ -41,12 +41,15 @@ const generateSiteMap = async () => {
   if (PageName === "food") {
     await page.waitForSelector("#Get_started", { visible: true });
     await page.click("#Get_started");
+    await page.waitForSelector("#request_food", { visible: true });
   }
 
-  await page.waitForSelector(".menuicons", {
-    visible: true,
-    timeout: 300000,
-  });
+  if (PageName !== "food") {
+    await page.waitForSelector(".menuicons", {
+      visible: true,
+      timeout: 300000,
+    });  
+  }
 
   if (PageName === "quality_desk") {
     await page.waitForSelector(".menu");

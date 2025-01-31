@@ -1,20 +1,20 @@
 {
   "APP_NAME": [
     {
-      "pageName": "Cad",
-      "url": "https://erp.agnikul.in/Cad"
+      "pageName": "trackrequest",
+      "url": "https://erp.agnikul.in/Fleet_Management/trackrequest"
     },
     {
-      "pageName": "raiseRequest",
-      "url": "https://erp.agnikul.in/Cad/raiseRequest"
+      "pageName": "requestapprovalfm",
+      "url": "https://erp.agnikul.in/Fleet_Management/requestapprovalfm"
     },
     {
-      "pageName": "trackRequest",
-      "url": "https://erp.agnikul.in/Cad/trackRequest"
+      "pageName": "externalservice",
+      "url": "https://erp.agnikul.in/Fleet_Management/externalservice"
     },
     {
       "pageName": "calendar",
-      "url": "https://erp.agnikul.in/Cad/calendar"
+      "url": "https://erp.agnikul.in/Fleet_Management/calendar"
     }
   ]
 }

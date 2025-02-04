@@ -6,7 +6,7 @@
 
 - Create a folder called **Reports** in root directory
 - Rename **.env.example** to **.env** and fill your email and password
-= Change **PageName** in **getSiteMap.ts**
+- Change **PageName** in **getSiteMap.ts**
 
 ## To run
 ```
